@@ -1,4 +1,4 @@
-const API = 'http://localhost:5000/api';
+const API = 'https://nutrition-tracker-zorw.onrender.com';
 let currentUser = null;
 let currentSession = null;
 let dailyTargets = { calories: 2000, protein: 150, carbs: 200, fats: 65 };
