@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NutriTracker — Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">🥗 NutriTracker</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="lang-switcher">
+        <button onclick="setLang('en')">EN</button>
+        <button onclick="setLang('te')">తె</button>
+      </div>
+      <span style="color:var(--text-muted);font-size:14px;">👤 <span id="user-name"></span></span>
+      <button class="btn-secondary" style="padding:8px 16px;font-size:13px;" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="dashboard active">
+
+    <!-- TABS -->
+    <div class="dashboard-nav">
+      <h2>👋 Welcome back, <span id="user-name-2"></span></h2>
+      <div class="tabs">
+        <button class="tab-btn active" id="btn-overview" onclick="showTab('overview')" data-i18n="dashboard">Overview</button>
+        <button class="tab-btn" id="btn-food" onclick="showTab('food')" data-i18n="food_log">Food Log</button>
+        <button class="tab-btn" id="btn-bmi" onclick="showTab('bmi')" data-i18n="bmi_calculator">BMI Calculator</button>
+        <button class="tab-btn" id="btn-profile" onclick="showTab('profile')">Profile</button>
+        <button class="tab-btn" id="btn-weekly" onclick="showTab('weekly')">📊 Weekly Report</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview" class="tab-content active">
+
+      <div class="cards-grid">
+        <div class="card">
+          <h4>🔥 Calories Today</h4>
+          <div class="value" id="total-calories">0</div>
+          <div class="unit">kcal consumed</div>
+        </div>
+        <div class="card">
+          <h4>💪 Protein</h4>
+          <div class="value" id="total-protein">0g</div>
+          <div class="unit">today</div>
+        </div>
+        <div class="card">
+          <h4>🍞 Carbs</h4>
+          <div class="value" id="total-carbs">0g</div>
+          <div class="unit">today</div>
+        </div>
+        <div class="card">
+          <h4>🧈 Fats</h4>
+          <div class="value" id="total-fats">0g</div>
+          <div class="unit">today</div>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h4>⚡ Calories Remaining</h4>
+          <div class="value" id="rem-calories">2000</div>
+          <div class="unit">kcal left for today</div>
+        </div>
+        <div class="card">
+          <h4>🎯 Protein Remaining</h4>
+          <div class="value" id="rem-protein">150g</div>
+          <div class="unit">protein left for today</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <h3 data-i18n="daily_progress">📊 Daily Progress</h3>
+
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🔥 Calories</span>
+            <span id="cal-label">0 / 2000 kcal</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="cal-progress" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>💪 Protein</span>
+            <span id="protein-label">0 / 150g</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="protein-progress" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🍞 Carbs</span>
+            <span id="carbs-label">0 / 200g</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="carbs-progress" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🧈 Fats</span>
+            <span id="fats-label">0 / 65g</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fats-progress" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOD LOG TAB -->
+    <div id="tab-food" class="tab-content">
+
+      <!-- SINGLE SEARCH SECTION (duplicates removed) -->
+      <div class="search-section">
+        <h3>🔍 Search &amp; Log Food</h3>
+
+        <div style="margin-bottom:16px;">
+          <p style="color:var(--text-muted);font-size:13px;margin-bottom:8px;">
+            💡 Type naturally: "2 chapatis and dal" or "1 bowl rice"
+          </p>
+          <div class="search-bar">
+            <input type="text" id="food-search-input"
+              placeholder="e.g. 2 eggs, 1 bowl dal, 3 chapatis..."/>
+            <select id="search-type"
+              style="background:var(--bg3);border:1px solid var(--card-border);
+              color:var(--text);padding:12px;border-radius:8px;font-size:14px;outline:none;">
+              <option value="indian">🇮🇳 Indian Foods</option>
+              <option value="natural">Natural Language (CalorieNinjas)</option>
+              <option value="openfood">Open Food Facts</option>
+              <option value="usda">USDA Database</option>
+            </select>
+            <button class="btn-primary" onclick="searchFood()">Search</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <p style="color:var(--text-muted);font-size:12px;margin-bottom:8px;">⚡ Quick Add:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('chapati')">Chapati</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('rice')">Rice</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('dal')">Dal</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('egg')">Egg</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('paneer')">Paneer</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('idli')">Idli</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('dosa')">Dosa</button>
+            <button class="food-tag" style="cursor:pointer;" onclick="quickSearch('biryani')">Biryani</button>
+          </div>
+        </div>
+
+        <div id="search-results" class="search-results"></div>
+      </div>
+
+      <!-- TODAY'S LOG TABLE -->
+      <div class="search-section">
+        <h3>📋 Today's Food Log</h3>
+        <div style="overflow-x:auto;">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Food</th>
+                <th>Quantity</th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Carbs</th>
+                <th>Fats</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody id="log-tbody">
+              <tr><td colspan="7" style="color:var(--text-muted);text-align:center;padding:20px;">
+                No food logged today. Search and log your meals above!
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BMI TAB -->
+    <div id="tab-bmi" class="tab-content">
+      <div class="bmi-section">
+        <h3 data-i18n="bmi_calculator">⚖️ BMI &amp; Diet Calculator</h3>
+
+        <div class="bmi-form">
+          <input type="number" id="bmi-age" placeholder="Age (years)" min="10" max="100"/>
+          <select id="bmi-gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <input type="number" id="bmi-height" placeholder="Height (cm)" min="100" max="250"/>
+          <input type="number" id="bmi-weight" placeholder="Weight (kg)" min="30" max="300"/>
+          <select id="bmi-activity">
+            <option value="sedentary">Sedentary (no exercise)</option>
+            <option value="light">Light (1-3 days/week)</option>
+            <option value="moderate" selected>Moderate (3-5 days/week)</option>
+            <option value="active">Active (6-7 days/week)</option>
+            <option value="very_active">Very Active (athlete)</option>
+          </select>
+          <select id="bmi-goal">
+            <option value="bulk">Bulk (Gain Muscle)</option>
+            <option value="cut">Cut (Lose Fat)</option>
+            <option value="maintain" selected>Maintain Weight</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" onclick="calculateBMI()">Calculate BMI &amp; Diet Plan</button>
+
+        <div id="bmi-result" class="bmi-result">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-bottom:20px;">
+            <div>
+              <div style="color:var(--text-muted);font-size:13px;margin-bottom:4px;">YOUR BMI</div>
+              <div class="bmi-score" id="bmi-score">0</div>
+              <div id="bmi-category" style="color:var(--primary);font-weight:600;"></div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted);font-size:13px;margin-bottom:4px;">MAINTENANCE (TDEE)</div>
+              <div style="font-size:24px;font-weight:700;color:var(--warning);" id="bmi-tdee">0</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted);font-size:13px;margin-bottom:4px;">YOUR TARGET</div>
+              <div style="font-size:24px;font-weight:700;color:var(--primary);" id="bmi-target">0</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted);font-size:13px;margin-bottom:4px;">DIET PLAN</div>
+              <div style="font-size:24px;font-weight:700;" id="bmi-plan">-</div>
+            </div>
+          </div>
+
+          <p id="bmi-recommendation"
+            style="color:var(--text-muted);margin-bottom:16px;font-size:14px;
+            background:var(--bg2);padding:12px;border-radius:8px;border-left:3px solid var(--primary);">
+          </p>
+
+          <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+            <div class="card" style="flex:1;min-width:120px;">
+              <h4>💪 Protein Target</h4>
+              <div class="value" id="bmi-protein">0g</div>
+            </div>
+            <div class="card" style="flex:1;min-width:120px;">
+              <h4>🍞 Carbs Target</h4>
+              <div class="value" id="bmi-carbs">0g</div>
+            </div>
+            <div class="card" style="flex:1;min-width:120px;">
+              <h4>🧈 Fats Target</h4>
+              <div class="value" id="bmi-fats">0g</div>
+            </div>
+          </div>
+
+          <h4 style="margin-bottom:12px;" data-i18n="recommendations">
+            🥗 Recommended Foods For Your Goal:
+          </h4>
+          <div class="recommendations-list" id="food-tags"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="tab-content">
+      <div class="bmi-section">
+        <h3>👤 My Profile</h3>
+        <div class="bmi-form">
+          <input type="number" id="p-age" placeholder="Age"/>
+          <select id="p-gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <input type="number" id="p-height" placeholder="Height (cm)"/>
+          <input type="number" id="p-weight" placeholder="Weight (kg)"/>
+          <select id="p-activity">
+            <option value="sedentary">Sedentary</option>
+            <option value="light">Light</option>
+            <option value="moderate">Moderate</option>
+            <option value="active">Active</option>
+            <option value="very_active">Very Active</option>
+          </select>
+          <select id="p-goal">
+            <option value="bulk">Bulk</option>
+            <option value="cut">Cut</option>
+            <option value="maintain">Maintain</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
+        <p id="profile-msg" style="color:var(--primary);margin-top:10px;font-size:14px;"></p>
+      </div>
+    </div>
+    <!-- WEEKLY REPORT TAB -->
+<div id="tab-weekly" class="tab-content">
+  <div class="bmi-section">
+    <h3>📊 Weekly Nutrition Report</h3>
+    <button class="btn-primary" style="margin-bottom:20px;"
+      onclick="loadWeeklyReport()">Generate This Week's Report</button>
+ 
+    <!-- SUMMARY CARDS -->
+    <div class="cards-grid" id="weekly-summary" style="display:none;">
+      <div class="card">
+        <h4>📅 Days Logged</h4>
+        <div class="value" id="w-days">0/7</div>
+      </div>
+      <div class="card">
+        <h4>🔥 Avg Calories</h4>
+        <div class="value" id="w-avg-cal">0</div>
+        <div class="unit">kcal/day</div>
+      </div>
+      <div class="card">
+        <h4>💪 Avg Protein</h4>
+        <div class="value" id="w-avg-protein">0g</div>
+        <div class="unit">per day</div>
+      </div>
+      <div class="card">
+        <h4>🏆 Best Day</h4>
+        <div class="value" style="font-size:18px;" id="w-best">-</div>
+      </div>
+    </div>
+ 
+    <!-- DAILY BREAKDOWN -->
+    <div id="weekly-breakdown" style="margin-top:24px;"></div>
+ 
+    <!-- WEEKLY TIP -->
+    <div id="weekly-tip"
+      style="margin-top:20px;padding:16px;background:var(--bg3);
+      border-radius:12px;border-left:4px solid var(--primary);
+      font-size:14px;color:var(--text-muted);display:none;">
+    </div>
+  </div>
+</div>
+ 
+  </div>
+
+  <script src="i18n/translations.js"></script>
+  <script src="script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      let user;
+      try {
+        user = JSON.parse(localStorage.getItem('user'));
+      } catch (e) {
+        user = null;
+      }
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+      const name = user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-name-2').textContent = name;
+    });
+  </script>
+
+</body>
+</html>
