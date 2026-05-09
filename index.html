@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NutriTracker — Track Your Nutrition</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">🥗 NutriTracker</div>
+    <div class="lang-switcher">
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('te')">हि</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 data-i18n="hero_title">Track Your Nutrition.<br/>Achieve Your Goal.</h1>
+      <p data-i18n="hero_sub">Log food, calculate BMI, get personalized diet plans — all in one place.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="showModal('register')" data-i18n="get_started">Get Started</button>
+        <button class="btn-secondary" onclick="showModal('login')" data-i18n="login">Login</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <i class="fas fa-fire"></i>
+        <h3>Calories</h3>
+        <p>Track every meal</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-dumbbell"></i>
+        <h3>BMI</h3>
+        <p>Know your body</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-bullseye"></i>
+        <h3>Goals</h3>
+        <p>Bulk, Cut or Maintain</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal hidden">
+    <div class="modal-box">
+      <button class="close-btn" onclick="hideModal('login')">✕</button>
+      <h2 data-i18n="login">Login</h2>
+      <input type="email" id="login-email" placeholder="Email" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button class="btn-primary" onclick="login()">Login</button>
+      <p class="switch-auth">Don't have an account? <span onclick="showModal('register')">Register</span></p>
+      <p id="login-msg" class="msg"></p>
+    </div>
+  </div>
+
+  <!-- REGISTER MODAL -->
+  <div id="modal-register" class="modal hidden">
+    <div class="modal-box">
+      <button class="close-btn" onclick="hideModal('register')">✕</button>
+      <h2 data-i18n="register">Register</h2>
+      <input type="text" id="reg-username" placeholder="Username" />
+      <input type="email" id="reg-email" placeholder="Email" />
+      <input type="password" id="reg-password" placeholder="Password" />
+      <button class="btn-primary" onclick="register()">Register</button>
+      <p class="switch-auth">Already have an account? <span onclick="showModal('login')">Login</span></p>
+      <p id="register-msg" class="msg"></p>
+    </div>
+  </div>
+
+  <script src="i18n/translations.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
