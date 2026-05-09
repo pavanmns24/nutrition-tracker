@@ -68,7 +68,7 @@ async function login() {
       localStorage.setItem('user',    JSON.stringify(data.user));
       localStorage.setItem('session', JSON.stringify(data.session));
       hideModal('login');
-      window.location.href = 'dashboard.html';
+      window.location.href = '/nutrition-tracker/frontend/dashboard.html';
     }
   } catch (err) {
     msg.textContent = 'Server error. Is backend running?';
